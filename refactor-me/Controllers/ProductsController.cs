@@ -1,115 +1,166 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
-using refactor_me.Models;
+using refactor_me.Domain;
+using refactor_me.Domain.Entities;
 
 namespace refactor_me.Controllers
 {
     [RoutePrefix("products")]
     public class ProductsController : ApiController
     {
-        [Route]
-        [HttpGet]
-        public Products GetAll()
+        private readonly IProductRepository _productRepository;
+        private readonly IProductOptionRepository _productOptionRepository;
+
+        public ProductsController(IProductRepository productRepository, IProductOptionRepository productOptionRepository)
         {
-            return new Products();
+            _productRepository = productRepository;
+            _productOptionRepository = productOptionRepository;
         }
 
         [Route]
         [HttpGet]
-        public Products SearchByName(string name)
+        public IEnumerable<Product> GetAll()
         {
-            return new Products(name);
+            return _productRepository.GetAll();
+        }
+
+        [Route]
+        [HttpGet]
+        public IEnumerable<Product> GetByName(string name)
+        {
+            return _productRepository.GetByName(name);
         }
 
         [Route("{id}")]
         [HttpGet]
-        public Product GetProduct(Guid id)
+        public Product GetById(Guid id)
         {
-            var product = new Product(id);
-            if (product.IsNew)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return product;
+            return _productRepository.GetById(id);
         }
 
         [Route]
         [HttpPost]
-        public void Create(Product product)
+        public Product Add(Product product)
         {
-            product.Save();
+            if (product == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            try
+            {
+                return _productRepository.Add(product);
+            }
+            catch (FluentValidation.ValidationException)
+            {
+                //TODO: here we can add a lot of code
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
         }
 
-        [Route("{id}")]
+        [Route]
         [HttpPut]
-        public void Update(Guid id, Product product)
+        public void Update(Product product)
         {
-            var orig = new Product(id)
+            if (product == null)
             {
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                DeliveryPrice = product.DeliveryPrice
-            };
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
-            if (!orig.IsNew)
-                orig.Save();
+            try
+            {
+                if (!_productRepository.Update(product))
+                {
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
+                }
+            }
+            catch (FluentValidation.ValidationException)
+            {
+                //TODO: here we can add a lot of validatio handling
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
         }
 
         [Route("{id}")]
         [HttpDelete]
         public void Delete(Guid id)
         {
-            var product = new Product(id);
-            product.Delete();
+            if (!_productRepository.Delete(id))
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
         }
 
         [Route("{productId}/options")]
         [HttpGet]
-        public ProductOptions GetOptions(Guid productId)
+        public IEnumerable<ProductOption> GetOptions(Guid productId)
         {
-            return new ProductOptions(productId);
+            return _productOptionRepository.GetAll(productId);
         }
 
         [Route("{productId}/options/{id}")]
         [HttpGet]
-        public ProductOption GetOption(Guid productId, Guid id)
+        public ProductOption GetOption(Guid id)
         {
-            var option = new ProductOption(id);
-            if (option.IsNew)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return option;
+            return _productOptionRepository.GetById(id);
         }
 
         [Route("{productId}/options")]
         [HttpPost]
-        public void CreateOption(Guid productId, ProductOption option)
+        public ProductOption CreateOption(Guid productId, ProductOption productOption)
         {
-            option.ProductId = productId;
-            option.Save();
+            if (productOption == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            try
+            {
+                productOption.ProductId = productId;
+                return _productOptionRepository.Add(productOption);
+            }
+            catch (FluentValidation.ValidationException)
+            {
+                //TODO: here we can add a lot of code
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
         }
 
         [Route("{productId}/options/{id}")]
         [HttpPut]
-        public void UpdateOption(Guid id, ProductOption option)
+        public void UpdateOption(Guid id, ProductOption productOption)
         {
-            var orig = new ProductOption(id)
+            if (productOption == null)
             {
-                Name = option.Name,
-                Description = option.Description
-            };
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
-            if (!orig.IsNew)
-                orig.Save();
+            try
+            {
+                productOption.Id = id;
+
+                if (!_productOptionRepository.Update(productOption))
+                {
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
+                }
+            }
+            catch (FluentValidation.ValidationException)
+            {
+                //TODO: here we can add a lot of validatio handling
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
         }
 
         [Route("{productId}/options/{id}")]
         [HttpDelete]
         public void DeleteOption(Guid id)
         {
-            var opt = new ProductOption(id);
-            opt.Delete();
+            if (!_productOptionRepository.Delete(id))
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
         }
     }
 }

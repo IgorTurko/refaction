@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "refactor-me", "refactor-me\refactor-me.csproj", "{20AB69F9-F2D3-4A68-96C3-424EC8B9406E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "refactor-me.Domain", "refactor-me.Domain\refactor-me.Domain.csproj", "{7CD1A73F-52DE-4FF7-AA41-0BEA2655856B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "refactor-me.Bussines", "refactor-me.Bussines\refactor-me.Bussines.csproj", "{89552502-90DD-447C-AF57-0A7B65830D19}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +19,19 @@ Global
 		{20AB69F9-F2D3-4A68-96C3-424EC8B9406E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20AB69F9-F2D3-4A68-96C3-424EC8B9406E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20AB69F9-F2D3-4A68-96C3-424EC8B9406E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CD1A73F-52DE-4FF7-AA41-0BEA2655856B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CD1A73F-52DE-4FF7-AA41-0BEA2655856B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CD1A73F-52DE-4FF7-AA41-0BEA2655856B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CD1A73F-52DE-4FF7-AA41-0BEA2655856B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89552502-90DD-447C-AF57-0A7B65830D19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89552502-90DD-447C-AF57-0A7B65830D19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89552502-90DD-447C-AF57-0A7B65830D19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89552502-90DD-447C-AF57-0A7B65830D19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {02FCF956-B6AD-4200-9A5E-50B15ECA1ADF}
 	EndGlobalSection
 EndGlobal
